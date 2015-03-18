@@ -6,10 +6,15 @@ public class PartSale {
 	private Sale sale;
 	private Product product;
 	private int amount;
-
+	
 	public PartSale() {
-		setSale(new Sale());
-		setProduct(new Product());
+		
+	}
+
+	public PartSale(int amount, Sale sale, Product product) {
+		this.sale = sale;
+		this.product = product;
+		this.amount = amount;
 	}
 
 	public int getAmount() {

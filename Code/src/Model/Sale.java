@@ -18,12 +18,14 @@ public class Sale {
 
 	}
 
-	public Sale(int id) {
+	public Sale(int id, String deliveryDate, Customer customer, Invoice invoice) {
 		this.id = id;
 		date = getDate();
+		deliveryStatus = false;
+		this.deliveryDate = deliveryDate;
+		this.customer = customer;
+		this.invoice = invoice;
 		partSale = new ArrayList<PartSale>();
-		setCustomer(new Customer());
-		setInvoice(new Invoice());
 		totalPrice = getTotalPrice();
 	}
 
@@ -45,7 +47,7 @@ public class Sale {
 		String dateString = dateFormat.format(date);
 		return dateString;
 	}
-	
+
 	public void setDate(String date) {
 		this.date = date;
 	}
