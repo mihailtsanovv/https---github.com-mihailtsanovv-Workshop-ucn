@@ -139,7 +139,6 @@ public class GUI extends JFrame {
 						btnRemove.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								if (table.getSelectedRow() != -1) {
-									// remove selected row from the model
 									model.removeRow(table.getSelectedRow());
 								}
 							}

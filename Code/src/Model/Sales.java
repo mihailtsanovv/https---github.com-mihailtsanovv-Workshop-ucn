@@ -7,7 +7,7 @@ public class Sales {
 
 	private int id;
 	private String date;
-	private Customers customers;
+	private Customer customers;
 	private Products products;
 	private double totalPrice;
 	private HashMap<Integer, Integer> partSale;
