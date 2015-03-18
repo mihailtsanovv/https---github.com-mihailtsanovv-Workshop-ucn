@@ -498,12 +498,17 @@ public class GUI extends JFrame {
 								}
 
 							btnShowCustomers.doClick();
+							
 							}
+							
 						});
 						btnDelete.setBounds(530, 355, 89, 23);
 						contentPanel.add(btnDelete);
 
-					
+						invalidate();
+						revalidate();
+						repaint();
+						setVisible(true);
 					}
 				});
 
