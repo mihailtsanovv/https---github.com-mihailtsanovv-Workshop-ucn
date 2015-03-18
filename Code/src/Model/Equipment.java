@@ -1,6 +1,6 @@
 package Model;
 
-public class Equipment extends Products {
+public class Equipment extends ProductInh {
 
 	private String type;
 	private String description;

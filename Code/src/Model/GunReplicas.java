@@ -1,6 +1,6 @@
 package Model;
 
-public class GunReplicas extends Products {
+public class GunReplicas extends ProductInh {
 
 	private String fabric;
 	private String calibre;

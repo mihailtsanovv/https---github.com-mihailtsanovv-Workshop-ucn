@@ -1,6 +1,6 @@
 package Model;
 
-public class Clothing extends Products {
+public class Clothing extends ProductInh {
 
 	private double size;
 	private String colour;
