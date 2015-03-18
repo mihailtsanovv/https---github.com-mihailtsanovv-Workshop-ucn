@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 
+import javax.swing.AbstractButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,6 +42,7 @@ public class GUI extends JFrame {
 	private JTable table;
 	private CtrCustomer cc = new CtrCustomer();
 	Customer c = new Customer();
+
 	/**
 	 * Launch the application.
 	 */
@@ -97,7 +99,7 @@ public class GUI extends JFrame {
 					public void actionPerformed(ActionEvent arg0) {
 
 						contentPanel.removeAll();
-					
+
 						table = new JTable();
 						table.setFont(new Font("Tahoma", Font.PLAIN, 15));
 						table.setModel(new DefaultTableModel(new Object[][] { {
@@ -329,11 +331,11 @@ public class GUI extends JFrame {
 									for (int x = 0; x < table.getColumnCount(); x++) {
 										System.out.println(table.getValueAt(i,
 												x));
-//										if (table.getValueAt(i, x) == null)
-//											values.add("");
-//										else
-											values.add(table.getValueAt(i, x)
-													.toString());
+										// if (table.getValueAt(i, x) == null)
+										// values.add("");
+										// else
+										values.add(table.getValueAt(i, x)
+												.toString());
 									}
 
 									try {
@@ -385,7 +387,7 @@ public class GUI extends JFrame {
 									flag = true;
 								} catch (Exception e2) {
 								}
-								
+
 								if (flag) {
 									c = cc.findById(Integer.parseInt(search));
 								} else {
@@ -408,7 +410,7 @@ public class GUI extends JFrame {
 						});
 						contentPanel.add(btnSearch);
 
-						table = new JTable();
+						JTable table = new JTable();
 						table.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
 						table.setModel(new DefaultTableModel(new Object[][] { {
@@ -419,9 +421,6 @@ public class GUI extends JFrame {
 									String.class, String.class, Integer.class,
 									String.class, Long.class };
 
-
-							
-							
 							public Class getColumnClass(int columnIndex) {
 								return columnTypes[columnIndex];
 							}
@@ -442,60 +441,39 @@ public class GUI extends JFrame {
 						contentPanel.add(scrollPane);
 						DefaultTableModel model = (DefaultTableModel) table
 								.getModel();
-				
+
 						ArrayList<Customer> cList = cc.findAllCustomers();
 						model.removeRow(0);
-						for(Customer c : cList){
-							
-							model.addRow(new Object[] { c.getId(),
-									c.getName(), c.getAddress(),
-									c.getZipCode(), c.getCity(),
-									c.getPhone() });
+						
+						for (Customer c : cList) {
+
+							model.addRow(new Object[] { c.getId(), c.getName(),
+									c.getAddress(), c.getZipCode(),
+									c.getCity(), c.getPhone() });
 						}
-						
-						
+
 						JButton btnUpdate = new JButton("Update");
 						btnUpdate.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
-								
-								
+
 								int[] vals = table.getSelectedRows();
-								for (int i = 0; i < vals.length; i++) {
+
+								for (int i : vals) {
+
 									ArrayList<String> values = new ArrayList<>();
 									for (int x = 0; x < table.getColumnCount(); x++) {
-										System.out.println(table.getValueAt(i,x));
+										// System.out.println(table.getValueAt(i,x).toString());
 										values.add(table.getValueAt(i, x)
 												.toString());
+
 									}
-									cc.updateCust(Integer.parseInt(values.get(0)),
-											values.get(1),
-											values.get(2),
-											Integer.parseInt(values.get(3)), values.get(4),values.get(5));
+									cc.updateCust(
+											Integer.parseInt(values.get(0)),
+											values.get(1), values.get(2),
+											Integer.parseInt(values.get(3)),
+											values.get(4), values.get(5));
 								}
-									
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
+
 							}
 						});
 						btnUpdate.setBounds(430, 355, 89, 23);
@@ -504,35 +482,28 @@ public class GUI extends JFrame {
 						JButton btnDelete = new JButton("Delete");
 						btnDelete.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
+
+								int[] vals = table.getSelectedRows();
+								boolean flag = true;
+								for (int i : vals) {
+
+									try {
+										cc.deleteCust(Integer.parseInt(table
+												.getValueAt(i, 0).toString()));
+									} catch (Exception e1) {
+										e1.printStackTrace();
+										flag = false;
+									}
+
+								}
+
+							btnShowCustomers.doClick();
 							}
 						});
 						btnDelete.setBounds(530, 355, 89, 23);
 						contentPanel.add(btnDelete);
 
-						invalidate();
-						revalidate();
-						repaint();
-						setVisible(true);
-
+					
 					}
 				});
 

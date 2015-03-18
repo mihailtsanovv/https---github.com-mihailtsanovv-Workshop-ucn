@@ -38,7 +38,7 @@ public class DBCustomer implements IFDBCustomer {
 		System.out.println("next id = " + nextId);
 
 		int rc = -1;
-		String query = "INSERT INTO Customer(id,name, address, zipcode,city, phone)  VALUES('"
+		String query = "INSERT INTO Customer(id,name, address, zipcode, city, phone)  VALUES('"
 				+ nextId
 				+ "','"
 				+ cust.getName()
@@ -76,7 +76,7 @@ public class DBCustomer implements IFDBCustomer {
 				+ custObj.getAddress() + "', "
 				+ "zipcode ='" + custObj.getZipCode() 
 				+ "', " + "city ='"
-				+ custObj.getCity() + "' " + "phone ='" 
+				+ custObj.getCity() + "', " + "phone ='" 
 				+ custObj.getPhone()
 				+ "' " + " WHERE id = '" 
 				+ custObj.getId() 
@@ -100,12 +100,12 @@ public class DBCustomer implements IFDBCustomer {
 
 		String query = "DELETE FROM customer WHERE id = '" + id + "'";
 		System.out.println(query);
-		try { // delete from customer
+		try {
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			rc = stmt.executeUpdate(query);
 			stmt.close();
-		}// slut try
+		}
 		catch (Exception ex) {
 			System.out.println("Delete exception in customer db: " + ex);
 		}
@@ -119,7 +119,7 @@ public class DBCustomer implements IFDBCustomer {
 
 		String query = buildQuery(wClause);
 
-		try { // read the customer from the database
+		try { 
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
@@ -128,7 +128,7 @@ public class DBCustomer implements IFDBCustomer {
 				Customer custObj = new Customer();
 				custObj = buildCustomer(results);
 				list.add(custObj);
-			}// end while
+			}
 			stmt.close();
 			// if (retrieveAssociation) { // The supervisor and department is to
 			// be

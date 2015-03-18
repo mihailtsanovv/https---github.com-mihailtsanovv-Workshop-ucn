@@ -41,7 +41,7 @@ public class CtrCustomer {
       {
           IFDBCustomer dbCust = new DBCustomer();
           Customer cust = new Customer();
-
+          cust.setId(id);
           cust.setName(name);
           cust.setAddress(address);
           cust.setCity(city);
@@ -55,7 +55,6 @@ public class CtrCustomer {
       public  void insertCust(String name, String address, int zipcode, String city, String phone) throws Exception
       {    
            Customer custObj = new Customer();
-//           custObj.setId(id);
            custObj.setName(name);
            custObj.setAddress(address);
            custObj.setCity(city);
@@ -75,7 +74,20 @@ public class CtrCustomer {
            }
       }
       
-
+      public  void deleteCust(int id) throws Exception
+      {    
+           try{
+            DBConnection.startTransaction();
+            DBCustomer dbCust = new DBCustomer();
+            dbCust.deleteCustomer(id);
+            DBConnection.commitTransaction();
+           }
+           catch(Exception e)
+           {
+               DBConnection.rollbackTransaction();
+               throw new Exception("Customer not inserted");
+           }
+      }
       
       
       
