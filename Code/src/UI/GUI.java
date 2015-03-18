@@ -1,5 +1,8 @@
 package UI;
 
+import Control.*;
+import Model.*;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -10,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
@@ -25,6 +29,8 @@ import javax.swing.JTable;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUI extends JFrame {
 
@@ -33,7 +39,8 @@ public class GUI extends JFrame {
 	private JPanel secondaryMenuPanel;
 	private JPanel contentPanel;
 	private JTable table;
-
+	private CtrCustomer cc = new CtrCustomer();
+	Customer c = new Customer();
 	/**
 	 * Launch the application.
 	 */
@@ -90,10 +97,9 @@ public class GUI extends JFrame {
 					public void actionPerformed(ActionEvent arg0) {
 
 						contentPanel.removeAll();
-
+					
 						table = new JTable();
 						table.setFont(new Font("Tahoma", Font.PLAIN, 15));
-
 						table.setModel(new DefaultTableModel(new Object[][] { {
 								null, null, null, null, null, null, null } },
 								new String[] { "Barcode", "Name", "Price",
@@ -262,11 +268,11 @@ public class GUI extends JFrame {
 
 						table.setModel(new DefaultTableModel(new Object[][] { {
 								null, null, null, null, null, null } },
-								new String[] { "ID", "Name", "Address",
-										"Zip Code", "City", "Phone" }) {
-							Class[] columnTypes = new Class[] { Integer.class,
-									String.class, String.class, Integer.class,
-									String.class, Long.class };
+								new String[] { "Name", "Address", "Zip Code",
+										"City", "Phone" }) {
+							Class[] columnTypes = new Class[] { String.class,
+									String.class, Integer.class, String.class,
+									Long.class };
 
 							public Class getColumnClass(int columnIndex) {
 								return columnTypes[columnIndex];
@@ -315,6 +321,34 @@ public class GUI extends JFrame {
 						JButton btnSubmit = new JButton("Submit");
 						btnSubmit.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+
+								table.selectAll();
+								int[] vals = table.getSelectedRows();
+								for (int i = 0; i < vals.length; i++) {
+									ArrayList<String> values = new ArrayList<>();
+									for (int x = 0; x < table.getColumnCount(); x++) {
+										System.out.println(table.getValueAt(i,
+												x));
+//										if (table.getValueAt(i, x) == null)
+//											values.add("");
+//										else
+											values.add(table.getValueAt(i, x)
+													.toString());
+									}
+
+									try {
+
+										cc.insertCust(
+												values.get(0),
+												values.get(1),
+												Integer.parseInt(values.get(2)),
+												values.get(3), values.get(4));
+									} catch (Exception e1) {
+										e1.printStackTrace();
+									}
+									values.clear();
+								}
+
 							}
 						});
 						btnSubmit.setBounds(530, 355, 89, 23);
@@ -342,6 +376,36 @@ public class GUI extends JFrame {
 
 						JButton btnSearch = new JButton("Search");
 						btnSearch.setBounds(111, 11, 89, 25);
+						btnSearch.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								String search = txtSearch.getText();
+								boolean flag = false;
+								try {
+									Integer.parseInt(search);
+									flag = true;
+								} catch (Exception e2) {
+								}
+								
+								if (flag) {
+									c = cc.findById(Integer.parseInt(search));
+								} else {
+									c = cc.findByName(search);
+								}
+
+								DefaultTableModel model = (DefaultTableModel) table
+										.getModel();
+								if (table.getRowCount() > 0) {
+									int rowCount = model.getRowCount();
+									for (int i = rowCount - 1; i >= 0; i--) {
+										model.removeRow(i);
+									}
+								}
+								model.addRow(new Object[] { c.getId(),
+										c.getName(), c.getAddress(),
+										c.getZipCode(), c.getCity(),
+										c.getPhone() });
+							}
+						});
 						contentPanel.add(btnSearch);
 
 						table = new JTable();
@@ -355,6 +419,9 @@ public class GUI extends JFrame {
 									String.class, String.class, Integer.class,
 									String.class, Long.class };
 
+
+							
+							
 							public Class getColumnClass(int columnIndex) {
 								return columnTypes[columnIndex];
 							}
@@ -375,10 +442,60 @@ public class GUI extends JFrame {
 						contentPanel.add(scrollPane);
 						DefaultTableModel model = (DefaultTableModel) table
 								.getModel();
-
+				
+						ArrayList<Customer> cList = cc.findAllCustomers();
+						model.removeRow(0);
+						for(Customer c : cList){
+							
+							model.addRow(new Object[] { c.getId(),
+									c.getName(), c.getAddress(),
+									c.getZipCode(), c.getCity(),
+									c.getPhone() });
+						}
+						
+						
 						JButton btnUpdate = new JButton("Update");
 						btnUpdate.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								
+								
+								int[] vals = table.getSelectedRows();
+								for (int i = 0; i < vals.length; i++) {
+									ArrayList<String> values = new ArrayList<>();
+									for (int x = 0; x < table.getColumnCount(); x++) {
+										System.out.println(table.getValueAt(i,x));
+										values.add(table.getValueAt(i, x)
+												.toString());
+									}
+									cc.updateCust(Integer.parseInt(values.get(0)),
+											values.get(1),
+											values.get(2),
+											Integer.parseInt(values.get(3)), values.get(4),values.get(5));
+								}
+									
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
 							}
 						});
 						btnUpdate.setBounds(430, 355, 89, 23);
@@ -387,6 +504,25 @@ public class GUI extends JFrame {
 						JButton btnDelete = new JButton("Delete");
 						btnDelete.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
 							}
 						});
 						btnDelete.setBounds(530, 355, 89, 23);

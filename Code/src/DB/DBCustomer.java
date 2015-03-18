@@ -1,6 +1,5 @@
 package DB;
 
-import DB.*;
 import Model.*;
 
 import java.sql.*;
@@ -34,12 +33,12 @@ public class DBCustomer implements IFDBCustomer {
 
 	@Override
 	public int insertCustomer(Customer cust) throws Exception {
-		int nextId = GetMax.getMaxId("Select max(id) from customer");
+		int nextId = GetMax.getMaxId("Select max(id) from Customer");
 		nextId = nextId + 1;
 		System.out.println("next id = " + nextId);
 
 		int rc = -1;
-		String query = "INSERT INTO customer(id,name, address, zipcode,city, phone)  VALUES('"
+		String query = "INSERT INTO Customer(id,name, address, zipcode,city, phone)  VALUES('"
 				+ nextId
 				+ "','"
 				+ cust.getName()

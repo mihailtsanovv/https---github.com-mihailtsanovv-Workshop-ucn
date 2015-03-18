@@ -3,7 +3,7 @@ package DB;
 import java.sql.*;
 
 public class DBConnection {
-	private static final String driver = "jdbc:sqlserver://kraka.ucn.dk:1433";
+	private static final String driver = "jdbc:sqlserver://localhost:1433";
 	private static final String databaseName = ";databaseName=dmaJ0914_2Sem_1";
 	private static String userName = ";user=dmaJ0914_2Sem_1";
 	private static String password = ";password=IsAllowed";
