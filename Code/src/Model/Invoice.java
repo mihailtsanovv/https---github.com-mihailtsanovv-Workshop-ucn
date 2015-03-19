@@ -6,45 +6,42 @@ import java.util.Date;
 
 public class Invoice {
 
-	private int number;
-	private String paymentDate;
-	private int amount;
+	private int invoiceNo;
+	private String saleDate;
+	private Sale sale;
 	
 	public Invoice(){
 		
 	}
 
-	public Invoice(int number, String paymentDate, int amount) {
-		this.number = number;
-		this.paymentDate = getPaymentDate();
-		this.amount = amount;
+	public Invoice(int invoiceNo, String saleDate, Sale sale) {
+		this.invoiceNo = invoiceNo;
+		this.saleDate = saleDate;
+		this.sale = sale;
 	}
 
-	public int getNumber() {
-		return number;
+	public int getInvoiceNo() {
+		return invoiceNo;
 	}
 
-	public void setNumber(int number) {
-		this.number = number;
+	public void setInvoiceNo(int invoiceNo) {
+		this.invoiceNo = invoiceNo;
 	}
 
-	public void setPaymentDate(String paymentDate) {
-		this.paymentDate = paymentDate;
+	public Sale getSale() {
+		return sale;
 	}
 
-	public String getPaymentDate() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = new Date();
-		String dateString = dateFormat.format(date);
-		return dateString;
+	public void setSale(Sale sale) {
+		this.sale = sale;
 	}
 
-	public int getAmount() {
-		return amount;
+	public String getSaleDate() {
+		return saleDate;
 	}
 
-	public void setAmount(int amount) {
-		this.amount = amount;
+	public void setSaleDate(String saleDate) {
+		this.saleDate = saleDate;
 	}
 
 }

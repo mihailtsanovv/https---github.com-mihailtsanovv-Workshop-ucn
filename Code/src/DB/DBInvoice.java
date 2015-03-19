@@ -1,5 +1,6 @@
 package DB;
 
+import Control.CtrSale;
 import DB.*;
 import Model.*;
 
@@ -9,13 +10,14 @@ import java.util.ArrayList;
 public class DBInvoice implements IFDBInvoice {
 	private Connection con;
 
+	CtrSale sc = new CtrSale();
 	public DBInvoice() {
 		con = DBConnection.getInstance().getDBcon();
 	}
 
 	@Override
-	public ArrayList<Invoice> getAllInvoice(boolean retriveAssociation) {
-		return miscWhere("", retriveAssociation);
+	public ArrayList<Invoice> getAllInvoiceBySaleId(int saleId, boolean retriveAssociation) {
+		return miscWhere("saleId ="+ saleId, retriveAssociation);
 	}
 
 	@Override
@@ -27,17 +29,17 @@ public class DBInvoice implements IFDBInvoice {
 
 	@Override
 	public int insertInvoice(Invoice inv) throws Exception {
-//		int nextId = GetMax.getMaxId("Select max(id) from Invoice");
-//		nextId = nextId + 1;
-//		System.out.println("next id = " + nextId);
-//
+		int nextInvoiceNo = GetMax.getMaxId("Select max(InvoiceNo) from Invoice");
+		nextInvoiceNo = nextInvoiceNo + 1;
+		System.out.println("next invoiceNo = " + nextInvoiceNo);
+
 		int rc = -1;
-		String query = "INSERT INTO Invoice(invoiceNo, paymentDate, amount)  VALUES('"
-				+ inv.getNumber()
+		String query = "INSERT INTO Invoice(InvoiceNo, saleDate, saleId)  VALUES('"
+				+ nextInvoiceNo
 				+ "','"
-				+ inv.getPaymentDate()
+				+ inv.getSale().getDate()
 				+ "','"
-				+ inv.getAmount()
+				+ inv.getSale().getId()
 				+ "')";
 
 		System.out.println("insert : " + query);
@@ -102,9 +104,9 @@ public class DBInvoice implements IFDBInvoice {
 	private Invoice buildInvoice(ResultSet results) {
 		Invoice invObj = new Invoice();
 		try {
-			invObj.setNumber(results.getInt("invoiceNo"));
-			invObj.setPaymentDate(results.getString("paymentDate"));
-			invObj.setAmount(results.getInt("amount"));
+			invObj.setInvoiceNo(results.getInt("invoiceNo"));
+			invObj.setSaleDate(sc.findById(results.getInt("saleId")).getDate());
+			invObj.setSale(sc.findById(results.getInt("saleId")));
 		} catch (Exception e) {
 			System.out.println("error in building the Invoice object");
 		}

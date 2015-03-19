@@ -1,5 +1,7 @@
 package DB;
 
+import Control.CtrCustomer;
+import Control.CtrProduct;
 import DB.*;
 import Model.*;
 
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 
 public class DBSale implements IFDBSale {
 	private Connection con;
+	CtrCustomer cc = new CtrCustomer();
 
 	public DBSale() {
 		con = DBConnection.getInstance().getDBcon();
@@ -32,21 +35,14 @@ public class DBSale implements IFDBSale {
 		System.out.println("next id = " + nextId);
 
 		int rc = -1;
-		String query = "INSERT INTO Sale(id, date, deliveryStatus, deliveryDate, customerId, totalPrice, invoiceNo)  VALUES('"
+		String query = "INSERT INTO Sale(id, date, customerId, totalPrice)  VALUES('"
 				+ nextId
 				+ "','"
 				+ sale.getDate()
 				+ "','"
-				+ sale.isDeliveryStatus()
-				+ "','"
-				+ sale.getDeliveryDate()
-				+ "','"
 				+ sale.getCustomer().getId()
 				+ "','"
-				+ sale.getTotalPrice()
-				+ "','"
-				+ sale.getInvoice().getNumber()
-				+ "')";
+				+ sale.getTotalPrice() + "')";
 
 		System.out.println("insert : " + query);
 		try {
@@ -59,30 +55,7 @@ public class DBSale implements IFDBSale {
 			System.out.println("sale is not inserted correct");
 			throw new Exception("sale is not inserted correct");
 		}
-		return (rc);
-	}
-
-	@Override
-	public int updateSale(Sale sale) {
-		Sale saleObj = sale;
-		int rc = -1;
-
-		String query = "UPDATE Sale SET "
-		        + "deliveryStaus ='" + saleObj.isDeliveryStatus()
-				+ "' " + " WHERE id = '" + saleObj.getId() 
-				+ "'";
-		System.out.println("Update query:" + query);
-		try { // update Sale
-			Statement stmt = con.createStatement();
-			stmt.setQueryTimeout(5);
-			rc = stmt.executeUpdate(query);
-
-			stmt.close();
-		}// slut try
-		catch (Exception ex) {
-			System.out.println("Update exception in Sale db: " + ex);
-		}
-		return (rc);
+		return nextId;
 	}
 
 	public int deleteSale(int id) {
@@ -120,7 +93,8 @@ public class DBSale implements IFDBSale {
 				list.add(saleObj);
 			}// end while
 			stmt.close();
-			// if (retrieveAssociation) { // The saleervisor and department is to
+			// if (retrieveAssociation) { // The saleervisor and department is
+			// to
 			// be
 			// // build as well
 			// for (Sale saleObj : list) {
@@ -152,11 +126,8 @@ public class DBSale implements IFDBSale {
 		try {
 			saleObj.setId(results.getInt("id"));
 			saleObj.setDate(results.getString("date"));
-			saleObj.setDeliveryStatus(results.getBoolean("deliveryStatus"));
-			saleObj.setDeliveryDate(results.getString("deliveryDate"));
-			saleObj.getCustomer().setId(results.getInt("customerId"));
+			saleObj.setCustomer(cc.findById(results.getInt("customerId")));
 			saleObj.setTotalPrice(results.getInt("totalPrice"));
-			saleObj.getInvoice().setNumber(results.getInt("invoiceNo"));
 		} catch (Exception e) {
 			System.out.println("error in building the Sale object");
 		}

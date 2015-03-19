@@ -10,8 +10,6 @@ public interface IFDBSale {
     public Sale searchSaleId( int id, boolean retriveAssociation);
     //insert a new employee
     public int insertSale(Sale sale) throws Exception;
-    //update information about an employee
-    public int updateSale(Sale sale);
     //delete
     public int deleteSale(int id);
     

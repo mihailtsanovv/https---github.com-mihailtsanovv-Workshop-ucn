@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class CtrSale {
 
+	CtrCustomer cc = new CtrCustomer();
+
 	/** Creates a new instance of CtrSale */
 	public CtrSale() {
 
@@ -19,36 +21,28 @@ public class CtrSale {
 		return allSale;
 	}
 
-	public Sale findByBarcode(int id) {
+	public Sale findById(int id) {
 		IFDBSale dbSale = new DBSale();
 		return dbSale.searchSaleId(id, true);
 	}
 
-	public int updateSale(boolean deliveryStatus) {
-
-		IFDBSale dbSale = new DBSale();
+	public int insertSale(int customerId, double totalPrice) throws Exception {
 		Sale saleObj = new Sale();
-
-		saleObj.setDeliveryStatus(deliveryStatus);
-		return dbSale.updateSale(saleObj);
-
-	}
-
-	public void insertSale(String deliveryDate) throws Exception {
-		Sale saleObj = new Sale();
-		saleObj.setDeliveryDate(deliveryDate);
+		saleObj.setCustomer(cc.findById(customerId));
+		saleObj.setTotalPrice(totalPrice);
 
 		try {
 			DBConnection.startTransaction();
 			DBSale dbSale = new DBSale();
-			dbSale.insertSale(saleObj);
+			int id = dbSale.insertSale(saleObj);
 			DBConnection.commitTransaction();
+			return id;
 		} catch (Exception e) {
 			DBConnection.rollbackTransaction();
 			throw new Exception("Sale not inserted");
 		}
 	}
-	
+
 	public void deleteSale(int id) throws Exception {
 
 		try {
