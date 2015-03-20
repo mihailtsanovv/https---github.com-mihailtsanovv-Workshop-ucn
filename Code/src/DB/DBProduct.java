@@ -1,6 +1,5 @@
 package DB;
 
-import Control.CtrSupplier;
 import DB.*;
 import Model.*;
 
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 
 public class DBProduct implements IFDBProduct {
 	private Connection con;
-	CtrSupplier cs = new CtrSupplier();
 
 	public DBProduct() {
 		con = DBConnection.getInstance().getDBcon();
@@ -36,12 +34,15 @@ public class DBProduct implements IFDBProduct {
 
 	@Override
 	public int insertProduct(Product pro) throws Exception {
+		int nextBarcode = GetMax.getMaxId("Select max(barcode) from proomer");
+		nextBarcode = nextBarcode + 1;
+		System.out.println("next barcode = " + nextBarcode);
 
 		int rc = -1;
-		String query = "INSERT INTO Product(barcode, name, purchasePrice, "
+		String query = "INSERT INTO proomer(barcode, name, purchasePrice, "
 				+ "salesPrice, rentPrice, countryOfOrigin, minStock, size, "
-				+ "colour, type, description, fabric, calibre, supplierId)  VALUES('"
-				+ pro.getBarcode()
+				+ "colour, type, description, fabric, calibre)  VALUES('"
+				+ nextBarcode
 				+ "','"
 				+ pro.getName()
 				+ "','"
@@ -66,8 +67,6 @@ public class DBProduct implements IFDBProduct {
 				+ pro.getFabric()
 				+ "','"
 				+ pro.getCalibre() 
-				+ "','"
-				+ pro.getSupplier().getId()
 				+ "')";
 
 		System.out.println("insert : " + query);
@@ -89,15 +88,14 @@ public class DBProduct implements IFDBProduct {
 		Product proObj = pro;
 		int rc = -1;
 
-		String query = "UPDATE Product SET " 
-		        + "name ='" + proObj.getName()
+		String query = "UPDATE proomer SET " + "name ='" + proObj.getName()
 				+ "', "
 				+ "purchasePrice ='" + proObj.getPurchasePrice() 
 				+ "', "
 				+ "salesPrice ='" + proObj.getSalesPrice() 
 				+ "', " 
 				+ "rentPrice ='" + proObj.getRentPrice() 
-				+ "', " 
+				+ "' " 
 				+ "countryOfOrigin ='" + proObj.getCountryOfOrigin()
 				+ "', "
 				+ "minStock ='" + proObj.getMinStock() 
@@ -105,20 +103,18 @@ public class DBProduct implements IFDBProduct {
 				+ "size ='" + proObj.getSize() 
 				+ "', " 
 				+ "colour ='" + proObj.getColour() 
-				+ "', " 
+				+ "' " 
 				+ "type ='" + proObj.getType()
 				+ "', "
 				+ "description ='" + proObj.getDescription() 
 				+ "', " 
 				+ "fabric ='" + proObj.getFabric() 
-				+ "', " 
+				+ "' " 
 				+ "calibre ='" + proObj.getCalibre()
-				+ "', " 
-				+ "supplierId ='" + proObj.getSupplier().getId()
 				+ "' " + " WHERE barcode = '" + proObj.getBarcode() 
 				+ "'";
 		System.out.println("Update query:" + query);
-		try { // update Product
+		try { // update proomer
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			rc = stmt.executeUpdate(query);
@@ -126,7 +122,7 @@ public class DBProduct implements IFDBProduct {
 			stmt.close();
 		}// slut try
 		catch (Exception ex) {
-			System.out.println("Update exception in Product db: " + ex);
+			System.out.println("Update exception in proomer db: " + ex);
 		}
 		return (rc);
 	}
@@ -134,16 +130,16 @@ public class DBProduct implements IFDBProduct {
 	public int deleteProduct(int barcode) {
 		int rc = -1;
 
-		String query = "DELETE FROM Product WHERE barcode = '" + barcode + "'";
+		String query = "DELETE FROM proomer WHERE barcode = '" + barcode + "'";
 		System.out.println(query);
-		try { // delete from Product
+		try { // delete from proomer
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			rc = stmt.executeUpdate(query);
 			stmt.close();
 		}// slut try
 		catch (Exception ex) {
-			System.out.println("Delete exception in Product db: " + ex);
+			System.out.println("Delete exception in proomer db: " + ex);
 		}
 		return (rc);
 	}
@@ -155,7 +151,7 @@ public class DBProduct implements IFDBProduct {
 
 		String query = buildQuery(wClause);
 
-		try { // read the Product from the database
+		try { // read the proomer from the database
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
@@ -200,7 +196,7 @@ public class DBProduct implements IFDBProduct {
 			proObj.setName(results.getString("name"));
 			proObj.setPurchasePrice(results.getDouble("purchasePrice"));
 			proObj.setSalesPrice(results.getDouble("salesPrice"));
-			proObj.setRentPrice(results.getDouble("rentPrice"));
+			proObj.setRentPrice(results.getDouble("setRentPrice"));
 			proObj.setCountryOfOrigin(results.getString("countryOfOrigin"));
 			proObj.setMinStock(results.getInt("minStock"));
 			proObj.setSize(results.getString("size"));
@@ -209,9 +205,8 @@ public class DBProduct implements IFDBProduct {
 			proObj.setDescription(results.getString("description"));
 			proObj.setFabric(results.getString("fabric"));
 			proObj.setCalibre(results.getDouble("calibre"));
-			proObj.setSupplier(cs.findById(results.getInt("supplierId")));
 		} catch (Exception e) {
-			System.out.println("error in building the Product object");
+			System.out.println("error in building the proomer object");
 		}
 		return proObj;
 	}
@@ -222,7 +217,7 @@ public class DBProduct implements IFDBProduct {
 
 		String query = buildQuery(wClause);
 		System.out.println(query);
-		try { // read the Product from the database
+		try { // read the proomer from the database
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
@@ -232,7 +227,7 @@ public class DBProduct implements IFDBProduct {
 				// assocaition is to be build
 				stmt.close();
 
-			} else { // no Product was found
+			} else { // no proomer was found
 				proObj = null;
 			}
 		}// end try

@@ -1,7 +1,5 @@
 package DB;
 
-import Control.CtrProduct;
-import Control.CtrSale;
 import DB.*;
 import Model.*;
 
@@ -10,16 +8,21 @@ import java.util.ArrayList;
 
 public class DBPartSale implements IFDBPartSale {
 	private Connection con;
-	CtrProduct pc = new CtrProduct();
-	CtrSale sc = new CtrSale();
 
 	public DBPartSale() {
 		con = DBConnection.getInstance().getDBcon();
 	}
 
 	@Override
-	public ArrayList<PartSale> getAllPartSaleBySaleId(int saleId, boolean retriveAssociation) {
-		return miscWhere("saleId="+saleId, retriveAssociation);
+	public ArrayList<PartSale> getAllPartSale(boolean retriveAssociation) {
+		return miscWhere("", retriveAssociation);
+	}
+
+	@Override
+	public PartSale searchPartSaleId(int id, boolean retriveAssociation) {
+		String wClause = "id like '%" + id + "%'";
+		System.out.println("SearchC " + wClause);
+		return singleWhere(wClause, retriveAssociation);
 	}
 
 	@Override
@@ -99,8 +102,8 @@ public class DBPartSale implements IFDBPartSale {
 	private PartSale buildPartSale(ResultSet results) {
 		PartSale partObj = new PartSale();
 		try {
-			partObj.setSale(sc.findById(results.getInt("saleId")));
-			partObj.setProduct(pc.findByBarcode(results.getInt("productBarcode")));
+			partObj.getSale().setId(results.getInt("saleId"));
+			partObj.getProduct().setBarcode(results.getInt("barcode"));
 			partObj.setAmount(results.getInt("amount"));
 		} catch (Exception e) {
 			System.out.println("error in building the PartSale object");

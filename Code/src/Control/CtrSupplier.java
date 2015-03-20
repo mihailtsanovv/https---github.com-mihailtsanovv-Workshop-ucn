@@ -29,7 +29,7 @@ public class CtrSupplier {
 		return dbCust.searchSupplierId(id, true);
 	}
 
-	public int updateSup(int id, String name, String address, String country,
+	public int updateCust(int id, String name, String address, String country,
 			String phone, String email) {
 		IFDBSupplier dbCust = new DBSupplier();
 		Supplier supObj = new Supplier();
@@ -44,9 +44,11 @@ public class CtrSupplier {
 
 	}
 
-	public void insertSup(String name, String address, String country,
+	public void insertCust(int id, String name, String address, String country,
 			String phone, String email) throws Exception {
 		Supplier supObj = new Supplier();
+		// supObj.setId(id);
+		supObj.setId(id);
 		supObj.setName(name);
 		supObj.setAddress(address);
 		supObj.setCountry(country);
@@ -64,7 +66,7 @@ public class CtrSupplier {
 		}
 	}
 	
-	public void deleteSup(int id) throws Exception {
+	public void deletePro(int id) throws Exception {
 
 		try {
 			DBConnection.startTransaction();

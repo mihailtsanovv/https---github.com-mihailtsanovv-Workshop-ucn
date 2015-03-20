@@ -6,26 +6,26 @@ import DB.*;
 import java.util.ArrayList;
 
 public class CtrPartSale {
-	
-	CtrProduct pc = new CtrProduct();
-	CtrSale sc = new CtrSale();
 
 	public CtrPartSale() {
 
 	}
 
-	public ArrayList<PartSale> findAllPartSalesBySaleId(int saleId) {
+	public ArrayList<PartSale> findAllPartSales() {
 		IFDBPartSale dbPartSale = new DBPartSale();
 		ArrayList<PartSale> allPartSale = new ArrayList<PartSale>();
-		allPartSale = dbPartSale.getAllPartSaleBySaleId(saleId, false);
+		allPartSale = dbPartSale.getAllPartSale(false);
 		return allPartSale;
 	}
 
-	public void insertPartSale(int saleId, int productBarcode, int amount) throws Exception {
+	public PartSale findById(int id) {
+		IFDBPartSale dbPartSale = new DBPartSale();
+		return dbPartSale.searchPartSaleId(id, true);
+	}
+
+	public void insertPartSale(int amount) throws Exception {
 		PartSale partObj = new PartSale();
 		partObj.setAmount(amount);
-		partObj.setProduct(pc.findByBarcode(productBarcode));
-		partObj.setSale(sc.findById(saleId));
 
 		try {
 			DBConnection.startTransaction();

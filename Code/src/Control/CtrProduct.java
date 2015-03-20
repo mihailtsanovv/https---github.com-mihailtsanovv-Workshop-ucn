@@ -6,7 +6,6 @@ import DB.*;
 import java.util.ArrayList;
 
 public class CtrProduct {
-	CtrSupplier sc = new CtrSupplier();
 
 	/** Creates a new instance of CtrProduct */
 	public CtrProduct() {
@@ -33,7 +32,7 @@ public class CtrProduct {
 	public int updatePro(int barcode, String name, double purchasePrice,
 			double salesPrice, double rentPrice, String countryOfOrigin,
 			int minStock, String size, String colour, String type,
-			String description, String fabric, double calibre, int supplierId) {
+			String description, String fabric, double calibre) {
 
 		IFDBProduct dbPro = new DBProduct();
 		Product proObj = new Product();
@@ -51,7 +50,6 @@ public class CtrProduct {
 		proObj.setDescription(description);
 		proObj.setFabric(fabric);
 		proObj.setCalibre(calibre);
-		proObj.setSupplier(sc.findById(supplierId));
 		return dbPro.updateProduct(proObj);
 
 	}
@@ -59,7 +57,7 @@ public class CtrProduct {
 	public void insertPro(int barcode, String name, double purchasePrice,
 			double salesPrice, double rentPrice, String countryOfOrigin,
 			int minStock, String size, String colour, String type,
-			String description, String fabric, double calibre, int supplierId) throws Exception {
+			String description, String fabric, double calibre) throws Exception {
 		Product proObj = new Product();
 		proObj.setBarcode(barcode);
 		proObj.setName(name);
@@ -74,7 +72,7 @@ public class CtrProduct {
 		proObj.setDescription(description);
 		proObj.setFabric(fabric);
 		proObj.setCalibre(calibre);
-		proObj.setSupplier(sc.findById(supplierId));
+
 		try {
 			DBConnection.startTransaction();
 			DBProduct dbPro = new DBProduct();
