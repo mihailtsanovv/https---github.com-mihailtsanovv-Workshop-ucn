@@ -6,26 +6,31 @@ import DB.*;
 import java.util.ArrayList;
 
 public class CtrPartSale {
+	
+	CtrProduct pc = new CtrProduct();
+	CtrSale sc = new CtrSale();
 
 	public CtrPartSale() {
 
 	}
 
-	public ArrayList<PartSale> findAllPartSales() {
+	public ArrayList<PartSale> findAllPartSalesBySaleId(int saleId) {
 		IFDBPartSale dbPartSale = new DBPartSale();
 		ArrayList<PartSale> allPartSale = new ArrayList<PartSale>();
-		allPartSale = dbPartSale.getAllPartSale(false);
+		allPartSale = dbPartSale.getAllPartSaleBySaleId(saleId, false);
 		return allPartSale;
 	}
 
-	public PartSale findById(int id) {
-		IFDBPartSale dbPartSale = new DBPartSale();
-		return dbPartSale.searchPartSaleId(id, true);
-	}
-
-	public void insertPartSale(int amount) throws Exception {
+	public void insertPartSale(int saleId, int productBarcode, String productName, double pricePerPiece, int amount, double price) throws Exception {
 		PartSale partObj = new PartSale();
+		partObj.setSale(sc.findById(saleId));
+		partObj.setProduct(pc.findByBarcode(productBarcode));
+		partObj.setProduct(pc.findByName(productName));
+		partObj.setPricePerPiece(pc.findByBarcode(productBarcode).getSalesPrice());
 		partObj.setAmount(amount);
+		partObj.setPrice(price);
+		
+		
 
 		try {
 			DBConnection.startTransaction();
@@ -35,6 +40,19 @@ public class CtrPartSale {
 		} catch (Exception e) {
 			DBConnection.rollbackTransaction();
 			throw new Exception("PartSale not inserted");
+		}
+	}
+	
+	public void deletePartSale(int saleId) throws Exception {
+
+		try {
+			DBConnection.startTransaction();
+			DBPartSale dbPartSale = new DBPartSale();
+			dbPartSale.deletePartSale(saleId);
+			DBConnection.commitTransaction();
+		} catch (Exception e) {
+			DBConnection.rollbackTransaction();
+			throw new Exception("PartSale not deleted");
 		}
 	}
 }

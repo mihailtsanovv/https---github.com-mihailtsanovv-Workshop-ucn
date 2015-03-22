@@ -1,5 +1,7 @@
 package DB;
 
+import Control.CtrProduct;
+import Control.CtrSale;
 import DB.*;
 import Model.*;
 
@@ -8,21 +10,16 @@ import java.util.ArrayList;
 
 public class DBPartSale implements IFDBPartSale {
 	private Connection con;
+	CtrProduct pc = new CtrProduct();
+	CtrSale sc = new CtrSale();
 
 	public DBPartSale() {
 		con = DBConnection.getInstance().getDBcon();
 	}
 
 	@Override
-	public ArrayList<PartSale> getAllPartSale(boolean retriveAssociation) {
-		return miscWhere("", retriveAssociation);
-	}
-
-	@Override
-	public PartSale searchPartSaleId(int id, boolean retriveAssociation) {
-		String wClause = "id like '%" + id + "%'";
-		System.out.println("SearchC " + wClause);
-		return singleWhere(wClause, retriveAssociation);
+	public ArrayList<PartSale> getAllPartSaleBySaleId(int saleId, boolean retriveAssociation) {
+		return miscWhere("saleId="+saleId, retriveAssociation);
 	}
 
 	@Override
@@ -32,12 +29,18 @@ public class DBPartSale implements IFDBPartSale {
 //		System.out.println("next id = " + nextId);
 //
 		int rc = -1;
-		String query = "INSERT INTO PartSale(saleId, productBarcode, amount)  VALUES('"
+		String query = "INSERT INTO PartSale(saleId, productBarcode, productName, pricePerPiece, amount, price)  VALUES('"
 				+ part.getSale().getId()
 				+ "','"
 				+ part.getProduct().getBarcode()
 				+ "','"
+				+ part.getProduct().getName()
+				+ "','"
+				+ part.getProduct().getSalesPrice()
+				+ "','"
 				+ part.getAmount()
+				+ "','"
+				+ part.getPrice()
 				+ "')";
 
 		System.out.println("insert : " + query);
@@ -102,9 +105,12 @@ public class DBPartSale implements IFDBPartSale {
 	private PartSale buildPartSale(ResultSet results) {
 		PartSale partObj = new PartSale();
 		try {
-			partObj.getSale().setId(results.getInt("saleId"));
-			partObj.getProduct().setBarcode(results.getInt("barcode"));
+			partObj.setSale(sc.findById(results.getInt("saleId")));
+			partObj.setProduct(pc.findByBarcode(results.getInt("productBarcode")));
+			partObj.setProduct(pc.findByName(results.getString("productName")));
+			partObj.setPricePerPiece(pc.findByBarcode(results.getInt("productBarcode")).getSalesPrice());
 			partObj.setAmount(results.getInt("amount"));
+			partObj.setPrice(results.getDouble("price"));
 		} catch (Exception e) {
 			System.out.println("error in building the PartSale object");
 		}
@@ -135,6 +141,24 @@ public class DBPartSale implements IFDBPartSale {
 			System.out.println("Query exception: " + e);
 		}
 		return partObj;
+	}
+
+	@Override
+	public int deletePartSale(int saleId) {
+		int rc = -1;
+
+		String query = "DELETE FROM partSale WHERE saleId = '" + saleId + "'";
+		System.out.println(query);
+		try { // delete from Sale
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		}// slut try
+		catch (Exception ex) {
+			System.out.println("Delete exception in partSale db: " + ex);
+		}
+		return (rc);
 	}
 
 }

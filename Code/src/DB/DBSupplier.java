@@ -34,12 +34,12 @@ public class DBSupplier implements IFDBSupplier {
 
 	@Override
 	public int insertSupplier(Supplier sup) throws Exception {
-		int nextId = GetMax.getMaxId("Select max(id) from supomer");
+		int nextId = GetMax.getMaxId("Select max(id) from Supplier");
 		nextId = nextId + 1;
 		System.out.println("next id = " + nextId);
 
 		int rc = -1;
-		String query = "INSERT INTO supomer(id,name, address, country, phone, email)  VALUES('"
+		String query = "INSERT INTO Supplier(id,name, address, country, phoneno, email)  VALUES('"
 				+ nextId
 				+ "','"
 				+ sup.getName()
@@ -72,19 +72,19 @@ public class DBSupplier implements IFDBSupplier {
 		Supplier supObj = sup;
 		int rc = -1;
 
-		String query = "UPDATE supomer SET " + "name ='" + supObj.getName()
+		String query = "UPDATE Supplier SET " + "name ='" + supObj.getName()
 				+ "', "
 				+ "address ='" + supObj.getAddress() 
 				+ "', "
 				+ "country ='" + supObj.getCountry() 
 				+ "', " 
-				+ "phone ='" + supObj.getPhone() 
-				+ "' " 
+				+ "phoneno ='" + supObj.getPhone() 
+				+ "', " 
 				+ "email ='" + supObj.getEmail()
 				+ "' " + " WHERE id = '" + supObj.getId() 
 				+ "'";
 		System.out.println("Update query:" + query);
-		try { // update supomer
+		try { // update Supplier
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			rc = stmt.executeUpdate(query);
@@ -92,7 +92,7 @@ public class DBSupplier implements IFDBSupplier {
 			stmt.close();
 		}// slut try
 		catch (Exception ex) {
-			System.out.println("Update exception in supomer db: " + ex);
+			System.out.println("Update exception in Supplier db: " + ex);
 		}
 		return (rc);
 	}
@@ -100,16 +100,16 @@ public class DBSupplier implements IFDBSupplier {
 	public int deleteSupplier(int id) {
 		int rc = -1;
 
-		String query = "DELETE FROM supomer WHERE id = '" + id + "'";
+		String query = "DELETE FROM Supplier WHERE id = '" + id + "'";
 		System.out.println(query);
-		try { // delete from supomer
+		try { // delete from Supplier
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			rc = stmt.executeUpdate(query);
 			stmt.close();
 		}// slut try
 		catch (Exception ex) {
-			System.out.println("Delete exception in supomer db: " + ex);
+			System.out.println("Delete exception in Supplier db: " + ex);
 		}
 		return (rc);
 	}
@@ -121,7 +121,7 @@ public class DBSupplier implements IFDBSupplier {
 
 		String query = buildQuery(wClause);
 
-		try { // read the supomer from the database
+		try { // read the Supplier from the database
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
@@ -166,10 +166,10 @@ public class DBSupplier implements IFDBSupplier {
 			supObj.setName(results.getString("name"));
 			supObj.setAddress(results.getString("address"));
 			supObj.setCountry(results.getString("country"));
-			supObj.setPhone(results.getString("phone"));
+			supObj.setPhone(results.getString("phoneno"));
 			supObj.setEmail(results.getString("email"));
 		} catch (Exception e) {
-			System.out.println("error in building the supomer object");
+			System.out.println("error in building the Supplier object");
 		}
 		return supObj;
 	}
@@ -180,7 +180,7 @@ public class DBSupplier implements IFDBSupplier {
 
 		String query = buildQuery(wClause);
 		System.out.println(query);
-		try { // read the supomer from the database
+		try { // read the Supplier from the database
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
@@ -190,7 +190,7 @@ public class DBSupplier implements IFDBSupplier {
 				// assocaition is to be build
 				stmt.close();
 
-			} else { // no supomer was found
+			} else { // no Supplier was found
 				supObj = null;
 			}
 		}// end try

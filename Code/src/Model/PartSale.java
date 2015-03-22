@@ -6,15 +6,19 @@ public class PartSale {
 	private Sale sale;
 	private Product product;
 	private int amount;
+	private double price;
+	private double pricePerPiece;
 	
 	public PartSale() {
 		
 	}
 
-	public PartSale(int amount, Sale sale, Product product) {
+	public PartSale( Sale sale, Product product, int amount, double price) {
 		this.sale = sale;
 		this.product = product;
+		pricePerPiece = getProduct().getSalesPrice();
 		this.amount = amount;
+		this.price = price;
 	}
 
 	public int getAmount() {
@@ -39,6 +43,22 @@ public class PartSale {
 
 	public void setSale(Sale sale) {
 		this.sale = sale;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public double getPricePerPiece() {
+		return pricePerPiece;
+	}
+
+	public void setPricePerPiece(double pricePerPiece) {
+		this.pricePerPiece = pricePerPiece;
 	}
 
 }

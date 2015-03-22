@@ -14,6 +14,7 @@ public class Product {
 	private String description;
 	private String fabric;
 	private double calibre;
+	private Supplier supplier;
 
 	public Product() {
 
@@ -22,7 +23,7 @@ public class Product {
 	public Product(int barcode, String name, double purchasePrice,
 			double salesPrice, double rentPrice, String countryOfOrigin,
 			int minStock, String size, String colour, String type,
-			String description, String fabric, double calibre) {
+			String description, String fabric, double calibre, Supplier supplier) {
 		this.barcode = barcode;
 		this.name = name;
 		this.purchasePrice = purchasePrice;
@@ -36,6 +37,7 @@ public class Product {
 		this.description = description;
 		this.fabric = fabric;
 		this.calibre = calibre;
+		this.supplier = supplier;
 	}
 
 	public int getBarcode() {
@@ -140,6 +142,14 @@ public class Product {
 
 	public void setCalibre(double calibre) {
 		this.calibre = calibre;
+	}
+
+	public Supplier getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
 	}
 
 }

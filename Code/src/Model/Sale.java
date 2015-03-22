@@ -7,30 +7,18 @@ public class Sale {
 
 	private int id;
 	private String date;
-	private String deliveryDate;
-	private boolean deliveryStatus;
 	private Customer customer;
-	private Invoice invoice;
-	private ArrayList<PartSale> partSale;
 	private double totalPrice;
 
 	public Sale() {
 
 	}
 
-	public Sale(int id, String deliveryDate, Customer customer, Invoice invoice) {
+	public Sale(int id, Customer customer) {
 		this.id = id;
 		date = getDate();
-		deliveryStatus = false;
-		this.deliveryDate = deliveryDate;
 		this.customer = customer;
-		this.invoice = invoice;
-		partSale = new ArrayList<PartSale>();
 		totalPrice = getTotalPrice();
-	}
-
-	public void addPartSale(PartSale partS) {
-		partSale.add(partS);
 	}
 
 	public int getId() {
@@ -42,7 +30,7 @@ public class Sale {
 	}
 
 	public String getDate() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		String dateString = dateFormat.format(date);
 		return dateString;
@@ -50,14 +38,6 @@ public class Sale {
 
 	public void setDate(String date) {
 		this.date = date;
-	}
-
-	public boolean isDeliveryStatus() {
-		return deliveryStatus;
-	}
-
-	public void setDeliveryStatus(boolean deliveryStatus) {
-		this.deliveryStatus = deliveryStatus;
 	}
 
 	public double getTotalPrice() {
@@ -74,21 +54,5 @@ public class Sale {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
-	}
-
-	public String getDeliveryDate() {
-		return deliveryDate;
-	}
-
-	public void setDeliveryDate(String deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
-
-	public Invoice getInvoice() {
-		return invoice;
-	}
-
-	public void setInvoice(Invoice invoice) {
-		this.invoice = invoice;
 	}
 }
